@@ -12,7 +12,7 @@ const auth = firebase.auth();
 function signupUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    auth.createUserWithEmailAndPassword(email, password)
+    firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             alert("Signup successful! Welcome, " + userCredential.user.email);
         })
@@ -23,7 +23,7 @@ function signupUser() {
 function loginUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    auth.signInWithEmailAndPassword(email, password)
+    firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             alert("Login successful! Welcome back, " + userCredential.user.email);
         })
@@ -32,7 +32,7 @@ function loginUser() {
         });
 }
 function logoutUser() {
-    auth.signOut()
+    firebase.auth().signOut()
         .then(() => {
             alert("You have logged out.");
             location.href = "index.html";
