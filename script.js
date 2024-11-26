@@ -7,7 +7,7 @@ const firebaseConfig = {
     appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
     measurementId: "G-80XSTM8F3N"
 };
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 function signupUser() {
     const email = document.getElementById("email").value;
@@ -41,6 +41,3 @@ function logoutUser() {
             alert("Error: " + error.message);
         });
 }
-window.signupUser = signupUser;
-window.loginUser = loginUser;
-window.logoutUser = logoutUser;
