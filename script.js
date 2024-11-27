@@ -45,6 +45,19 @@ function logoutUser() {
             alert("Error: " + error.message);
         });
 }
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
+function signInWithGoogle() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            const user = result.user;
+            alert(`Welcome, ${user.displayName}!`);
+        })
+        .catch((error) => {
+            console.error("Error during Google Sign-In:", error.message);
+            alert("Failed to sign in: " + error.message);
+        });
+}
 window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
