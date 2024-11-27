@@ -1,3 +1,5 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
 const firebaseConfig = {
     apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
     authDomain: "e-commerce-6015d.firebaseapp.com",
@@ -7,12 +9,12 @@ const firebaseConfig = {
     appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
     measurementId: "G-80XSTM8F3N"
 };
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 function signupUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             alert("Signup successful! Welcome, " + userCredential.user.email);
         })
@@ -23,7 +25,7 @@ function signupUser() {
 function loginUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             alert("Login successful! Welcome back, " + userCredential.user.email);
         })
@@ -32,7 +34,7 @@ function loginUser() {
         });
 }
 function logoutUser() {
-    firebase.auth().signOut()
+    signOut(auth)
         .then(() => {
             alert("You have logged out.");
             location.href = "index.html";
@@ -41,3 +43,6 @@ function logoutUser() {
             alert("Error: " + error.message);
         });
 }
+window.signupUser = signupUser;
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
