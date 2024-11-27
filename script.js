@@ -1,10 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 const firebaseConfig = {
     apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
     authDomain: "e-commerce-6015d.firebaseapp.com",
     projectId: "e-commerce-6015d",
-    storageBucket: "e-commerce-6015d.appspot.com",
+    storageBucket: "e-commerce-6015d.firebasestorage.app",
     messagingSenderId: "996362215179",
     appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
     measurementId: "G-80XSTM8F3N"
@@ -47,11 +47,13 @@ function logoutUser() {
 function signInWithGoogle() {
     signInWithPopup(auth, provider)
         .then((result) => {
-            const user = result.user;
-            alert(`Welcome, ${user.displayName}!`);
+            alert(`Welcome, ${result.user.displayName}`);
         })
         .catch((error) => {
-            console.error("Error during Google Sign-In:", error.message);
-            alert("Failed to sign in: " + error.message);
+            alert(`Error: ${error.message}`);
         });
 }
+window.signupUser = signupUser;
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+window.signInWithGoogle = signInWithGoogle;
