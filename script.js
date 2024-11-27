@@ -45,10 +45,9 @@ function logoutUser() {
             alert("Error: " + error.message);
         });
 }
-const provider = new GoogleAuthProvider();
-const auth = getAuth();
+const provider = new firebase.auth.GoogleAuthProvider();
 function signInWithGoogle() {
-    signInWithPopup(auth, provider)
+    firebase.auth().signInWithPopup(provider)
         .then((result) => {
             const user = result.user;
             alert(`Welcome, ${user.displayName}!`);
