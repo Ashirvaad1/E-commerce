@@ -12,6 +12,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+signInWithRedirect(auth, provider);
 function signupUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
