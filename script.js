@@ -91,6 +91,28 @@ async function displayShops() {
         alert(`Error: ${error.message}`);
     }
 }
+async function viewProducts(shopId) {
+    localStorage.setItem('currentShop', shopId);
+    location.href = 'view-products.html';
+}
+async function displayProducts() {
+    const shopId = localStorage.getItem('currentShop');
+    const productList = document.getElementById('products');
+    productList.innerHTML = '';
+    try {
+        const querySnapshot = await getDocs(collection(db, `shops/${shopId}/products`));
+        querySnapshot.forEach((doc) => {
+            const li = document.createElement('li');
+            li.textContent = `Name: ${doc.data().productName}, Price: ${doc.data().price}, Quantity: ${doc.data().quantity}`;
+            productList.appendChild(li);
+        });
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+    }
+}
+if (location.pathname.includes('view-products.html')) {
+    window.onload = displayProducts;
+}
 window.addProduct = addProduct;
 window.signupUser = signupUser;
 window.loginUser = loginUser;
