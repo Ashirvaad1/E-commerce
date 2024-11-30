@@ -54,6 +54,11 @@ function signInWithGoogle() {
             alert(`Error: ${error.message}`);
         });
 }
+firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+        window.location.href = "login.html";
+    }
+});
 const db = getFirestore(app);
 async function addProduct(event) {
     event.preventDefault();
