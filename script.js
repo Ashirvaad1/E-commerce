@@ -76,8 +76,25 @@ async function addProduct(event) {
         alert(`Error: ${error.message}`);
     }
 }
+async function displayShops() {
+    const shopList = document.getElementById('shops');
+    shopList.innerHTML = '';
+    try {
+        const querySnapshot = await getDocs(collection(db, "shops"));
+        querySnapshot.forEach((doc) => {
+            const li = document.createElement('li');
+            li.textContent = doc.data().name;
+            li.addEventListener('click', () => viewProducts(doc.id));
+            shopList.appendChild(li);
+        });
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+    }
+}
 window.addProduct = addProduct;
 window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
 window.signInWithGoogle = signInWithGoogle;
+window.displayShops = displayShops;
+window.onload = displayShops;
