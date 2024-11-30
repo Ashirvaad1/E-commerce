@@ -81,19 +81,12 @@ async function addProduct(event) {
         alert(`Error: ${error.message}`);
     }
 }
-async function displayShops() {
-    const shopList = document.getElementById('shops');
-    shopList.innerHTML = '';
-    try {
-        const querySnapshot = await getDocs(collection(db, "shops"));
-        querySnapshot.forEach((doc) => {
-            const li = document.createElement('li');
-            li.textContent = doc.data().name;
-            li.addEventListener('click', () => viewProducts(doc.id));
-            shopList.appendChild(li);
-        });
-    } catch (error) {
-        alert(`Error: ${error.message}`);
+function displayShops() {
+    const shopElement = document.getElementById("shop-container");
+    if (shopElement) {
+        shopElement.innerHTML = "Shops list";
+    } else {
+        console.error("Element 'shop-container' not found!");
     }
 }
 async function viewProducts(shopId) {
