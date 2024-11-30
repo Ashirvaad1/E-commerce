@@ -54,8 +54,30 @@ function signInWithGoogle() {
             alert(`Error: ${error.message}`);
         });
 }
+const db = getFirestore(app);
+async function addProduct(event) {
+    event.preventDefault();
+    const shopName = document.getElementById('shopName').value;
+    const productName = document.getElementById('productName').value;
+    const price = document.getElementById('price').value;
+    const quantity = document.getElementById('quantity').value;
+    try {
+        const shopRef = doc(db, "shops", shopName);
+        await setDoc(shopRef, { name: shopName }, { merge: true });
+        const productRef = doc(collection(db, `shops/${shopName}/products`));
+        await setDoc(productRef, {
+            productName,
+            price: parseFloat(price),
+            quantity: parseInt(quantity),
+        });
+        alert("Product added successfully!");
+        document.getElementById('productForm').reset();
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+    }
+}
+window.addProduct = addProduct;
 window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
 window.signInWithGoogle = signInWithGoogle;
-const db = getFirestore(app);
