@@ -54,7 +54,7 @@ function signInWithGoogle() {
             alert(`Error: ${error.message}`);
         });
 }
-firebase.auth().onAuthStateChanged((user) => {
+auth.onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "login.html";
     }
