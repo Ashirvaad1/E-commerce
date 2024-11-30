@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 const firebaseConfig = {
     apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
     authDomain: "e-commerce-6015d.firebaseapp.com",
@@ -57,3 +58,4 @@ window.signupUser = signupUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
 window.signInWithGoogle = signInWithGoogle;
+const db = getFirestore(app);
