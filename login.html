@@ -61,116 +61,146 @@
         <button class="button" onclick="showSignIn()">Sign In</button>
         <button class="button" onclick="showSignUp()">Sign Up</button>
     </div>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
-            authDomain: "e-commerce-6015d.firebaseapp.com",
-            projectId: "e-commerce-6015d",
-            storageBucket: "e-commerce-6015d.firebasestorage.app",
-            messagingSenderId: "996362215179",
-            appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
-            measurementId: "G-80XSTM8F3N"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        window.signupUser = function signupUser(event) {
-            event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert(`Signup successful! Welcome, ${userCredential.user.email}`);
-                })
-                .catch((error) => {
-                    alert(`Error: ${error.message}`);
-                });
-        };
-        window.loginUser = function loginUser(event) {
-            event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert(`Login successful! Welcome back, ${userCredential.user.email}`);
-                })
-                .catch((error) => {
-                    alert(`Error: ${error.message}`);
-                });
-        };
-        const container = document.getElementById('container');
-        window.showSignIn = function showSignIn() {
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithPopup, 
+        GoogleAuthProvider, 
+        OAuthProvider, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
+        authDomain: "e-commerce-6015d.firebaseapp.com",
+        projectId: "e-commerce-6015d",
+        storageBucket: "e-commerce-6015d.firebasestorage.app",
+        messagingSenderId: "996362215179",
+        appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
+        measurementId: "G-80XSTM8F3N"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const googleProvider = new GoogleAuthProvider();
+    const microsoftProvider = new OAuthProvider('microsoft.com');
+
+    // Microsoft Sign-in
+    window.signInWithMicrosoft = function signInWithMicrosoft() {
+        signInWithPopup(auth, microsoftProvider)
+            .then((result) => {
+                alert(`Welcome, ${result.user.displayName}`);
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    };
+
+    window.signupUser = function signupUser(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert(`Signup successful! Welcome, ${userCredential.user.email}`);
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    };
+
+    window.loginUser = function loginUser(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert(`Login successful! Welcome back, ${userCredential.user.email}`);
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    };
+
+    const container = document.getElementById('container');
+    window.showSignIn = function showSignIn() {
+        container.innerHTML = `
+            <button class="button" onclick="signInOption('email')">Email</button>
+            <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
+            <button class="button" onclick="signInWithMicrosoft()">Microsoft</button>
+            <button class="button">Facebook</button>
+        `;
+    };
+
+    window.signInOrSignUpWithGoogle = function signInOrSignUpWithGoogle() {
+        signInWithPopup(auth, googleProvider)
+            .then((result) => {
+                alert(`Welcome, ${result.user.displayName}`);
+            })
+            .catch((error) => {
+                alert(`Error: ${error.message}`);
+            });
+    };
+
+    window.signInOption = function signInOption(option) {
+        if (option === 'email') {
             container.innerHTML = `
-                <button class="button" onclick="signInOption('email')">Email</button>
-                <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
-                <button class="button">Microsoft</button>
-                <button class="button">Facebook</button>
+                <form id="signInForm" onsubmit="loginUser(event)">
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Enter your email" required/>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder="Enter your password" required/>
+                    </div>
+                    <button type="submit" class="button">Sign In</button>
+                </form>
             `;
-        };
-window.signInOrSignUpWithGoogle = function signInOrSignUpWithGoogle() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            alert(`Welcome, ${result.user.displayName}`);
-        })
-        .catch((error) => {
-            alert(`Error: ${error.message}`);
-        });
-};
-        window.signInOption = function signInOption(option) {
-            if (option === 'email') {
-                container.innerHTML = `
-                    <form id="signInForm" onsubmit="loginUser(event)">
-                        <div class="input-group">
-                            <input type="email" id="email" placeholder="Enter your email" required/>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" id="password" placeholder="Enter your password" required/>
-                        </div>
-                        <button type="submit" class="button">Sign In</button>
-                    </form>
-                `;
-            }
-        };
-        window.showSignUp = function showSignUp() {
+        }
+    };
+
+    window.showSignUp = function showSignUp() {
+        container.innerHTML = `
+            <button class="button" onclick="signUpOption('email')">Email</button>
+            <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
+            <button class="button" onclick="signInWithMicrosoft()">Microsoft</button>
+            <button class="button">Facebook</button>
+        `;
+    };
+
+    window.signUpOption = function signUpOption(option) {
+        if (option === 'email') {
             container.innerHTML = `
-                <button class="button" onclick="signUpOption('email')">Email</button>
-                <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
-                <button class="button">Microsoft</button>
-                <button class="button">Facebook</button>
+                <form id="signUpForm" onsubmit="signupUser(event)">
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Enter your email" required/>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder="Create a password" oninput="validatePassword()" required/>
+                    </div>
+                    <div id="validation-list">
+                        <p class="validation" id="length">At least 6 characters</p>
+                        <p class="validation" id="uppercase">At least one uppercase letter</p>
+                        <p class="validation" id="lowercase">At least one lowercase letter</p>
+                        <p class="validation" id="number">At least one number</p>
+                        <p class="validation" id="special">At least one special character</p>
+                    </div>
+                    <button type="submit" class="button">Sign Up</button>
+                </form>
             `;
-        };
-        window.signUpOption = function signUpOption(option) {
-            if (option === 'email') {
-                container.innerHTML = `
-                    <form id="signUpForm" onsubmit="signupUser(event)">
-                        <div class="input-group">
-                            <input type="email" id="email" placeholder="Enter your email" required/>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" id="password" placeholder="Create a password" oninput="validatePassword()" required/>
-                        </div>
-                        <div id="validation-list">
-                            <p class="validation" id="length">At least 6 characters</p>
-                            <p class="validation" id="uppercase">At least one uppercase letter</p>
-                            <p class="validation" id="lowercase">At least one lowercase letter</p>
-                            <p class="validation" id="number">At least one number</p>
-                            <p class="validation" id="special">At least one special character</p>
-                        </div>
-                        <button type="submit" class="button">Sign Up</button>
-                    </form>
-                `;
-            }
-        };
-        window.validatePassword = function validatePassword() {
-            const password = document.getElementById('password').value;
-            document.getElementById('length').classList.toggle('valid', password.length >= 6);
-            document.getElementById('uppercase').classList.toggle('valid', /[A-Z]/.test(password));
-            document.getElementById('lowercase').classList.toggle('valid', /[a-z]/.test(password));
-            document.getElementById('number').classList.toggle('valid', /[0-9]/.test(password));
-            document.getElementById('special').classList.toggle('valid', /[!@#$%^&*(),.?":{}|<>]/.test(password));
-        };
-    </script>
+        }
+    };
+
+    window.validatePassword = function validatePassword() {
+        const password = document.getElementById('password').value;
+        document.getElementById('length').classList.toggle('valid', password.length >= 6);
+        document.getElementById('uppercase').classList.toggle('valid', /[A-Z]/.test(password));
+        document.getElementById('lowercase').classList.toggle('valid', /[a-z]/.test(password));
+        document.getElementById('number').classList.toggle('valid', /[0-9]/.test(password));
+        document.getElementById('special').classList.toggle('valid', /[!@#$%^&*(),.?":{}|<>]/.test(password));
+    };
+</script>
 </body>
 </html>
