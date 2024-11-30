@@ -64,7 +64,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
             authDomain: "e-commerce-6015d.firebaseapp.com",
@@ -74,16 +73,13 @@
             appId: "1:996362215179:web:9a28af932292d45d9f0c0e",
             measurementId: "G-80XSTM8F3N"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-
         window.signupUser = function signupUser(event) {
             event.preventDefault();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     alert(`Signup successful! Welcome, ${userCredential.user.email}`);
@@ -92,12 +88,10 @@
                     alert(`Error: ${error.message}`);
                 });
         };
-
         window.loginUser = function loginUser(event) {
             event.preventDefault();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     alert(`Login successful! Welcome back, ${userCredential.user.email}`);
@@ -106,19 +100,25 @@
                     alert(`Error: ${error.message}`);
                 });
         };
-
-        window.signInWithGoogle=function signInWithGoogle()
-        {ignIn
-s
+        window.signInWithGoogle=function signInWithGoogle() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            alert(`Welcome, ${result.user.displayName}`);
+        })
+        .catch((error) => {
+            alert(`Error: ${error.message}`);
+        });
+};
         const container = document.getElementById('container');
-
         window.showSignIn = function showSignIn() {
             container.innerHTML = `
                 <button class="button" onclick="signInOption('email')">Email</button>
                 <button class="button" onclick="signInWithGoogle()">Google</button>
+                <button class="button">Apple</button>
+                <button class="button">Microsoft</button>
+                <button class="button">Facebook</button>
             `;
         };
-
         window.signInOption = function signInOption(option) {
             if (option === 'email') {
                 container.innerHTML = `
@@ -134,13 +134,15 @@ s
                 `;
             }
         };
-
         window.showSignUp = function showSignUp() {
             container.innerHTML = `
                 <button class="button" onclick="signUpOption('email')">Email</button>
+                <button class="button">Google</button>
+                <button class="button">Apple</button>
+                <button class="button">Microsoft</button>
+                <button class="button">Facebook</button>
             `;
         };
-
         window.signUpOption = function signUpOption(option) {
             if (option === 'email') {
                 container.innerHTML = `
@@ -163,7 +165,6 @@ s
                 `;
             }
         };
-
         window.validatePassword = function validatePassword() {
             const password = document.getElementById('password').value;
             document.getElementById('length').classList.toggle('valid', password.length >= 6);
