@@ -92,11 +92,11 @@ async function addProduct(event) {
 }
 
 function displayShops() {
-    const shopElement = document.getElementById("shop-container");
+    const shopElement = document.getElementById("shops");
     if (shopElement) {
         shopElement.innerHTML = "Shops list";
     } else {
-        console.error("Element 'shop-container' not found!");
+        console.error("Element 'shops' not found!");
     }
 }
 
