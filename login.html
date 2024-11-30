@@ -105,12 +105,10 @@
             container.innerHTML = `
                 <button class="button" onclick="signInOption('email')">Email</button>
                 <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
-                <button class="button">Apple</button>
                 <button class="button">Microsoft</button>
                 <button class="button">Facebook</button>
             `;
         };
-
 window.signInOrSignUpWithGoogle = function signInOrSignUpWithGoogle() {
     signInWithPopup(auth, provider)
         .then((result) => {
@@ -120,8 +118,6 @@ window.signInOrSignUpWithGoogle = function signInOrSignUpWithGoogle() {
             alert(`Error: ${error.message}`);
         });
 };
-
-        
         window.signInOption = function signInOption(option) {
             if (option === 'email') {
                 container.innerHTML = `
@@ -141,7 +137,6 @@ window.signInOrSignUpWithGoogle = function signInOrSignUpWithGoogle() {
             container.innerHTML = `
                 <button class="button" onclick="signUpOption('email')">Email</button>
                 <button class="button" onclick="signInOrSignUpWithGoogle()">Google</button>
-                <button class="button">Apple</button>
                 <button class="button">Microsoft</button>
                 <button class="button">Facebook</button>
             `;
