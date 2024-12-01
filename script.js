@@ -77,21 +77,26 @@ async function addProduct(event) {
         window.location.href = "login.html";
         return;
     }
-    const productName = document.getElementById("productName").value;
+    const productName = document.getElementById("productName").value.trim();
     const price = parseFloat(document.getElementById("price").value);
     const quantity = parseInt(document.getElementById("quantity").value);
+    if (!productName || isNaN(price) || isNaN(quantity) || quantity < 0 || price < 0) {
+        alert("Please provide valid product details.");
+        return;
+    }
     try {
         const shopkeeperEmail = user.email;
-        const productRef = doc(collection(db, "products"));
+        console.log("Adding product for:", shopkeeperEmail);
+        const userRef = collection(db, shopkeeperEmail);
+        const productRef = doc(userRef, productName);
         await setDoc(productRef, {
-            shopkeeperEmail,
-            productName,
             price,
             quantity,
         });
         alert("Product added successfully!");
         document.getElementById("productForm").reset();
     } catch (error) {
+        console.error("Error adding product:", error.message);
         alert(`Error adding product: ${error.message}`);
     }
 }
