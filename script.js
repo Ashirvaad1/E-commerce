@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -71,23 +71,28 @@ const db = getFirestore(app);
 
 async function addProduct(event) {
     event.preventDefault();
-    const shopName = document.getElementById('shopName').value;
-    const productName = document.getElementById('productName').value;
-    const price = document.getElementById('price').value;
-    const quantity = document.getElementById('quantity').value;
+    const user = auth.currentUser;
+    if (!user) {
+        alert("You must be logged in to add products.");
+        window.location.href = "login.html";
+        return;
+    }
+    const productName = document.getElementById("productName").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const quantity = parseInt(document.getElementById("quantity").value);
     try {
-        const shopRef = doc(db, "shops", shopName);
-        await setDoc(shopRef, { name: shopName }, { merge: true });
-        const productRef = doc(collection(db, `shops/${shopName}/products`));
+        const shopkeeperEmail = user.email;
+        const productRef = doc(collection(db, "products"));
         await setDoc(productRef, {
+            shopkeeperEmail,
             productName,
-            price: parseFloat(price),
-            quantity: parseInt(quantity),
+            price,
+            quantity,
         });
         alert("Product added successfully!");
-        document.getElementById('productForm').reset();
+        document.getElementById("productForm").reset();
     } catch (error) {
-        alert(`Error: ${error.message}`);
+        alert(`Error adding product: ${error.message}`);
     }
 }
 
