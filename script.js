@@ -134,6 +134,58 @@ async function displayProducts() {
 if (location.pathname.includes('view-products.html')) {
     window.onload = displayProducts;
 }
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const form = document.getElementById("product-form");
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const name = document.getElementById("name").value;
+  const price = parseFloat(document.getElementById("price").value);
+  const quantity = parseInt(document.getElementById("quantity").value);
+  const imageFile = document.getElementById("image").files[0];
+  if (!imageFile) {
+    alert("Please select an image file.");
+    return;
+  }
+  try {
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(`public/${imageFile.name}`, imageFile, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+    if (uploadError) {
+      console.error("Image upload error:", uploadError.message);
+      alert("Failed to upload image.");
+      return;
+    }
+    const { data: publicURLData } = supabase.storage
+      .from("product-images")
+      .getPublicUrl(`public/${imageFile.name}`);
+    const imageURL = publicURLData.publicUrl;
+      const { error: insertError } = await supabase.from("products").insert([
+      {
+        name: name,
+        price: price,
+        quantity: quantity,
+        image_url: imageURL,
+      },
+    ]);
+    if (insertError) {
+      console.error("Product insert error:", insertError.message);
+      alert("Failed to add product.");
+      return;
+    }
+    alert("Product added successfully!");
+    form.reset();
+  } catch (err) {
+    console.error("Error:", err.message);
+    alert("An error occurred. Please try again.");
+  }
+});
+
+
 
 window.addProduct = addProduct;
 window.signupUser = signupUser;
