@@ -139,6 +139,55 @@ if (location.pathname.includes('view-products.html')) {
 const supabaseUrl = "https://izvdtpdjsnwerogmrwiv.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dmR0cGRqc253ZXJvZ21yd2l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMxNjIwNDMsImV4cCI6MjA0ODczODA0M30.2PlstYR2Bg8tZnwcgKj8nblnpHLNZQIXAon8kBx90Yw";
 const supabase = createClient(supabaseUrl, supabaseKey);
+async function addProduct(event) {
+    event.preventDefault();
+
+    const productName = document.getElementById("productName").value.trim();
+    const price = parseFloat(document.getElementById("price").value);
+    const quantity = parseInt(document.getElementById("quantity").value);
+    const imageFile = document.getElementById("productImage").files[0];
+
+    if (!productName || isNaN(price) || isNaN(quantity) || !imageFile) {
+        alert("Please provide valid product details and an image.");
+        return;
+    }
+
+    try {
+        const { data, error } = await supabase.storage
+            .from('product-images')
+            .upload(`${Date.now()}_${imageFile.name}`, imageFile);
+
+        if (error) throw error;
+
+        const { publicURL } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(data.path);
+
+        const user = auth.currentUser;
+        if (!user) {
+            alert("You must be logged in to add products.");
+            return;
+        }
+
+        const shopkeeperEmail = user.email;
+        const userRef = collection(db, shopkeeperEmail);
+        const productRef = doc(userRef, productName);
+
+        await setDoc(productRef, {
+            productName,
+            price,
+            quantity,
+            imageUrl: publicURL,
+        });
+
+        alert("Product added successfully!");
+        document.getElementById("productForm").reset();
+    } catch (error) {
+        console.error("Error adding product:", error.message);
+        alert(`Error adding product: ${error.message}`);
+    }
+}
+
 
 window.addProduct = addProduct;
 window.signupUser = signupUser;
