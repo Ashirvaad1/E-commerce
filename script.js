@@ -70,37 +70,37 @@ auth.onAuthStateChanged((user) => {
 
 const db = getFirestore(app);
 
-async function addProduct(event) {
-    event.preventDefault();
-    const user = auth.currentUser;
-    if (!user) {
-        alert("You must be logged in to add products.");
-        window.location.href = "login.html";
-        return;
-    }
-    const productName = document.getElementById("productName").value.trim();
-    const price = parseFloat(document.getElementById("price").value);
-    const quantity = parseInt(document.getElementById("quantity").value);
-    if (!productName || isNaN(price) || isNaN(quantity) || quantity < 0 || price < 0) {
-        alert("Please provide valid product details.");
-        return;
-    }
-    try {
-        const shopkeeperEmail = user.email;
-        console.log("Adding product for:", shopkeeperEmail);
-        const userRef = collection(db, shopkeeperEmail);
-        const productRef = doc(userRef, productName);
-        await setDoc(productRef, {
-            price,
-            quantity,
-        });
-        alert("Product added successfully!");
-        document.getElementById("productForm").reset();
-    } catch (error) {
-        console.error("Error adding product:", error.message);
-        alert(`Error adding product: ${error.message}`);
-    }
-}
+//async function addProduct(event) {
+//    event.preventDefault();
+//    const user = auth.currentUser;
+//    if (!user) {
+//        alert("You must be logged in to add products.");
+//        window.location.href = "login.html";
+//        return;
+//    }
+//    const productName = document.getElementById("productName").value.trim();
+//    const price = parseFloat(document.getElementById("price").value);
+//    const quantity = parseInt(document.getElementById("quantity").value);
+//    if (!productName || isNaN(price) || isNaN(quantity) || quantity < 0 || price < 0) {
+//        alert("Please provide valid product details.");
+//        return;
+//    }
+//    try {
+//        const shopkeeperEmail = user.email;
+//        console.log("Adding product for:", shopkeeperEmail);
+//        const userRef = collection(db, shopkeeperEmail);
+//        const productRef = doc(userRef, productName);
+//        await setDoc(productRef, {
+//            price,
+//            quantity,
+//        });
+//        alert("Product added successfully!");
+//        document.getElementById("productForm").reset();
+//    } catch (error) {
+//        console.error("Error adding product:", error.message);
+//        alert(`Error adding product: ${error.message}`);
+//    }
+//}
 
 function displayShops() {
     const shopElement = document.getElementById("shops");
