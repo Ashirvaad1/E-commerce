@@ -1,8 +1,7 @@
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
-const db = firebase.firestore();
-const supabase = createClient(https://izvdtpdjsnwerogmrwiv.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dmR0cGRqc253ZXJvZ21yd2l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMxNjIwNDMsImV4cCI6MjA0ODczODA0M30.2PlstYR2Bg8tZnwcgKj8nblnpHLNZQIXAon8kBx90Yw);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
 const firebaseConfig = {
     apiKey: "AIzaSyADJuT7UDOxpu4gaV6aRpOCzsBPBb0O368",
     authDomain: "e-commerce-6015d.firebaseapp.com",
@@ -135,58 +134,6 @@ async function displayProducts() {
 if (location.pathname.includes('view-products.html')) {
     window.onload = displayProducts;
 }
-const SUPABASE_URL = "https://izvdtpdjsnwerogmrwiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6dmR0cGRqc253ZXJvZ21yd2l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMxNjIwNDMsImV4cCI6MjA0ODczODA0M30.2PlstYR2Bg8tZnwcgKj8nblnpHLNZQIXAon8kBx90Yw";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const form = document.getElementById("product-form");
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const name = document.getElementById("name").value;
-  const price = parseFloat(document.getElementById("price").value);
-  const quantity = parseInt(document.getElementById("quantity").value);
-  const imageFile = document.getElementById("image").files[0];
-  if (!imageFile) {
-    alert("Please select an image file.");
-    return;
-  }
-  try {
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(`public/${imageFile.name}`, imageFile, {
-        cacheControl: "3600",
-        upsert: true,
-      });
-    if (uploadError) {
-      console.error("Image upload error:", uploadError.message);
-      alert("Failed to upload image.");
-      return;
-    }
-    const { data: publicURLData } = supabase.storage
-      .from("product-images")
-      .getPublicUrl(`public/${imageFile.name}`);
-    const imageURL = publicURLData.publicUrl;
-      const { error: insertError } = await supabase.from("products").insert([
-      {
-        name: name,
-        price: price,
-        quantity: quantity,
-        image_url: imageURL,
-      },
-    ]);
-    if (insertError) {
-      console.error("Product insert error:", insertError.message);
-      alert("Failed to add product.");
-      return;
-    }
-    alert("Product added successfully!");
-    form.reset();
-  } catch (err) {
-    console.error("Error:", err.message);
-    alert("An error occurred. Please try again.");
-  }
-});
-
-
 
 window.addProduct = addProduct;
 window.signupUser = signupUser;
