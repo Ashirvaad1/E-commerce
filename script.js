@@ -111,7 +111,11 @@ const SCOPES = "https://www.googleapis.com/auth/drive.file";
 let GoogleAuth;
 
 async function initClient() {
-    await gapi.load("client:auth2", async () => {
+    await new Promise((resolve, reject) => {
+        console.log("Starting Google API initialization...");
+        gapi.load("client:auth2", async () => {
+            console.log("gapi client:auth2 loaded");
+            try {
         await gapi.client.init({
             apiKey: API_KEY,
             clientId: CLIENT_ID,
@@ -120,10 +124,19 @@ async function initClient() {
         });
         GoogleAuth = gapi.auth2.getAuthInstance();
         console.log("GoogleAuth initialized:", GoogleAuth);
+                resolve();
+            } catch (error) {
+                console.error("Error initializing Google API client:", error);
+                reject(error);
+            }
+    });
     });
 }
 
 async function uploadFile(file) {
+    if(!GoogleAuth) {
+        throw new Error("GoogleAuth is not initialized. Please refresh the page.")
+    }
     if(!GoogleAuth.isSignedIn.get()) {
         throw new Error("User is not signed in. Please sign in to continue.");
     }
@@ -200,3 +213,6 @@ window.logoutUser = logoutUser;
 window.signInWithGoogle = signInWithGoogle;
 window.displayShops = displayShops;
 window.onload = displayShops;
+window.onload =() => {
+    initClient();
+    displayShops();
