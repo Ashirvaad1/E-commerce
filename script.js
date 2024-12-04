@@ -111,7 +111,7 @@ const SCOPES = "https://www.googleapis.com/auth/drive.file";
 let GoogleAuth;
 
 async function initClient() {
-    gapi.load("client:auth2", async () => {
+    await gapi.load("client:auth2", async () => {
         await gapi.client.init({
             apiKey: API_KEY,
             clientId: CLIENT_ID,
@@ -119,10 +119,18 @@ async function initClient() {
             scope: SCOPES,
         });
         GoogleAuth = gapi.auth2.getAuthInstance();
+        console.log("GoogleAuth initialized:", GoogleAuth);
     });
 }
 
 async function uploadFile(file) {
+    if(!GoogleAuth.isSignedIn.get()) {
+        throw new Error("User is not signed in. Please sign in to continue.");
+    }
+    const token=gapi.auth.getToken();
+    if(!token) {
+        throw new Error("Unable to retrieve authentication token.");
+    }
     const metadata = {
         name: file.name,
         mimeType: file.type,
@@ -130,6 +138,8 @@ async function uploadFile(file) {
     const form = new FormData();
     form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
     form.append("file", file);
+
+    try {
     const response = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
         method: "POST",
         headers: {
@@ -139,6 +149,10 @@ async function uploadFile(file) {
     });
     const result = await response.json();
     return `https://drive.google.com/uc?id=${result.id}`;
+} catch (eroor) {
+        console.error("Error uploading file:", error);
+        throw error;
+    }
 }
 
 async function addProduct(event) {
