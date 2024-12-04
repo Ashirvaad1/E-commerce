@@ -123,7 +123,6 @@ async function initClient() {
 }
 
 async function uploadFile(file) {
-    await signIn();
     const metadata = {
         name: file.name,
         mimeType: file.type,
